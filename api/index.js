@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const app = express();
 app.use(express.json());
 
-app.use(cors());
+app.use(cors);
 
 const PORT = process.env.PORT || 8080;
 const secretKey = "guru";
@@ -21,7 +21,7 @@ const generateToken = (user) => {
 };
 
 mongoose
-  .connect("mongodb+srv://gurubrahmamvelpula531:guru@cluster0.tusxhsk.mongodb.net/Blog?retryWrites=true&w=majority&appName=Cluster0")
+  .connect("mongodb+srv://Vguru:guru@cluster0.esn1gep.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log("MongoDB connection error:", err));
 
