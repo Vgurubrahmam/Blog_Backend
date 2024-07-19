@@ -21,7 +21,7 @@ const generateToken = (user) => {
 };
 
 mongoose
-  .connect("mongodb+srv://Vguru:guru@cluster0.esn1gep.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  .connect("mongodb+srv://Vguru:guru@cluster0.esn1gep.mongodb.net/Blog?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log("MongoDB connection error:", err));
 
