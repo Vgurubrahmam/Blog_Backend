@@ -9,9 +9,8 @@ const jwt = require("jsonwebtoken");
 const app = express();
 app.use(express.json());
 
-app.use(cors);
+app.use(cors());
 
-const PORT = process.env.PORT || 8080;
 const secretKey = "guru";
 
 const generateToken = (user) => {
@@ -21,7 +20,7 @@ const generateToken = (user) => {
 };
 
 mongoose
-  .connect("mongodb+srv://Vguru:guru@cluster0.esn1gep.mongodb.net/Blog?retryWrites=true&w=majority&appName=Cluster0")
+  .connect("mongodb+srv://Vguru:guru@cluster0.lkgshfk.mongodb.net/Blog?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log("MongoDB connection error:", err));
 
@@ -127,7 +126,9 @@ app.get("/protectedroutes", async (req, res) => {
     res.status(500).send({ message: "Error occurred while fetching blogs" });
   }
 });
-
+app.get("/", async (req, res) => {
+  return res.send({'msg' : 'Hello'})
+})
 // update post
 app.patch('/updateposts/:id', async (req, res) => {
   console.log("Update blog request received for ID:", req.params.id);
@@ -170,10 +171,5 @@ app.delete("/deletepost/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, (err) => {
-  if (!err) {
-    console.log(`Server is running on 'http://localhost:${PORT}`);
-  } else {
-    console.log("Error occurred, server can't start", err);
-  }
-});
+
+module.exports = app
