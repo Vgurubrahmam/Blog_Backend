@@ -172,4 +172,38 @@ app.delete("/deletepost/:id", async (req, res) => {
 });
 
 
+app.get("/userprofile", async (req, res) => {
+  console.log("Get user profile request received");
+
+  const token = req.header("Authorization")?.replace("Bearer ", "");
+  if (!token) {
+    return res.status(401).send({ message: "Authorization token is missing." });
+  }
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    const userId = decoded.id;
+
+    const userProfile = await User.findById(userId).select('-password');
+    if (!userProfile) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const userPosts = await Blog.find({ userId: userProfile._id });
+    res.status(200).send({ message: "User profile fetched successfully", user: userProfile, posts: userPosts });
+  } catch (error) {
+    console.log("Error fetching user profile:", error);
+    
+    if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+      return res.status(401).send({ message: "Token expired or invalid.", error });
+    }
+    
+    res.status(500).send({ message: "Error occurred while fetching user profile." });
+  }
+});
+
+app.listen(8000,()=>{
+  console.log("server is running at http://localhost:8000")
+})
+
 module.exports = app
