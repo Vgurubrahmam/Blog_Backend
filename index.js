@@ -2,10 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const argon2 = require("argon2");
-const User = require("../models/userSchema");
-const Blog = require('../models/blogSchema')
+const User = require("./models/userSchema");
+const Blog = require('./models/blogSchema')
 const jwt = require("jsonwebtoken");
-const Comments =require("../models/commentSchema")
+const Comments =require("./models/commentSchema")
 const app = express();
 app.use(express.json());
 
