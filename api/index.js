@@ -5,7 +5,7 @@ const argon2 = require("argon2");
 const User = require("../models/userSchema");
 const Blog = require('../models/blogSchema')
 const jwt = require("jsonwebtoken");
-
+const Comments =require("../models/commentSchema")
 const app = express();
 app.use(express.json());
 
@@ -190,6 +190,8 @@ app.get("/userprofile", async (req, res) => {
     }
 
     const userPosts = await Blog.find({ userId: userProfile._id });
+    console.log(userPosts);
+    
     res.status(200).send({ message: "User profile fetched successfully", user: userProfile, posts: userPosts });
   } catch (error) {
     console.log("Error fetching user profile:", error);
@@ -199,6 +201,49 @@ app.get("/userprofile", async (req, res) => {
     }
     
     res.status(500).send({ message: "Error occurred while fetching user profile." });
+  }
+});
+
+// commnets post
+app.post("/addComments", async (req, res) => {
+  console.log("Received request to add comment"); 
+
+  const commentData = req.body;
+
+  if (!commentData.comment || !commentData.postId || !commentData.email || !commentData.name) {
+    return res.status(400).send({ message: "All fields are required" });
+  }
+
+  try {
+    const newComment = new Comments({
+      comment: commentData.comment,
+      postId: commentData.postId,
+      email: commentData.email,
+      name: commentData.name,
+    });
+
+    await newComment.save();
+    res.status(200).send({ message: "Comment added successfully",newComment });
+  } catch (err) {
+    console.error("Error while saving comment:", err);
+    res.status(500).send({ message: "Failed to add comment", error: err.message });
+  }
+});
+
+// get comment
+app.get("/getComments", async (req, res) => {
+  console.log("Get comments request received");
+  const {postId}=req.query
+  try {
+    let filter={}
+    if(postId){
+      filter.postId=postId
+    }
+    const comments = await Comments.find(filter);
+    res.status(200).send({ message: "Successfully fetched comments", comments: comments });
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).send({ message: "Error occurred while fetching comments" });
   }
 });
 
